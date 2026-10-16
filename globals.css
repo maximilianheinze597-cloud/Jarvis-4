@@ -1,0 +1,412 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #03070e;
+  --panel: rgba(8, 18, 33, 0.65);
+  --line: rgba(80, 223, 255, 0.35);
+  --text: #d6f7ff;
+  --muted: #88a6b8;
+  --accent: #42dbff;
+  --accent-alt: #3ef7d6;
+  --warn: #ff9736;
+  --error: #ff4f7c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 184, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 75% 10%, rgba(62, 247, 214, 0.07), transparent 35%),
+    var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.jarvis-shell {
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  gap: 1rem;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.jarvis-shell.accent-teal {
+  --accent: #3ef7d6;
+}
+
+.jarvis-shell.accent-orange {
+  --accent: #ff9736;
+}
+
+.jarvis-sidebar,
+.jarvis-panel,
+.jarvis-main {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+}
+
+.jarvis-sidebar,
+.jarvis-panel {
+  padding: 1rem;
+}
+
+.jarvis-sidebar h2 {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 1px solid color-mix(in oklab, var(--accent), #ffffff 10%);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text);
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(66, 219, 255, 0.25), 0 0 20px rgba(66, 219, 255, 0.2) inset;
+}
+
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.side-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.45rem;
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.side-list button.active {
+  border-color: var(--accent);
+  background: rgba(66, 219, 255, 0.15);
+}
+
+.jarvis-main {
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+  align-content: start;
+}
+
+.jarvis-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.5rem;
+}
+
+.jarvis-topbar .sub {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.jarvis-topbar strong {
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+.jarvis-topbar span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.state-label {
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.reactor {
+  position: relative;
+  margin: 0 auto;
+  width: min(58vw, 360px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.reactor .ring {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(66, 219, 255, 0.35);
+}
+
+.ring-a {
+  inset: 8%;
+  animation: spin 12s linear infinite;
+}
+
+.ring-b {
+  inset: 20%;
+  animation: spinReverse 9s linear infinite;
+}
+
+.ring-c {
+  inset: 32%;
+  animation: pulse 2.8s ease-in-out infinite;
+}
+
+.core {
+  width: 26%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(66, 219, 255, 0.95) 0%, rgba(66, 219, 255, 0.2) 65%, transparent 100%);
+  box-shadow: 0 0 40px rgba(66, 219, 255, 0.5);
+}
+
+.reactor.state-listening .ring,
+.reactor.state-listening .core {
+  animation-duration: 1.1s;
+  border-color: rgba(66, 245, 255, 0.75);
+}
+
+.reactor.state-thinking .ring-a {
+  animation-duration: 2.4s;
+}
+
+.reactor.state-speaking .core {
+  animation: speaking 0.8s ease-in-out infinite;
+}
+
+.reactor.state-executing .ring-b {
+  border-style: dashed;
+  animation-duration: 0.9s;
+}
+
+.reactor.state-error .core {
+  background: radial-gradient(circle, rgba(255, 79, 124, 0.95) 0%, rgba(255, 79, 124, 0.2) 70%, transparent 100%);
+  box-shadow: 0 0 40px rgba(255, 79, 124, 0.5);
+}
+
+.reactor.state-disconnected {
+  opacity: 0.5;
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.status-pill {
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.status-pill span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.status-pill strong {
+  color: var(--accent);
+}
+
+.composer {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.composer label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+textarea,
+input {
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--text);
+  padding: 0.65rem;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.composer-actions,
+.response-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.response-box,
+.chat-log,
+.jarvis-panel section {
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  padding: 0.75rem;
+}
+
+.response-box p,
+.chat-log p,
+.msg p {
+  white-space: pre-wrap;
+  margin: 0.4rem 0;
+}
+
+.chat-log > div {
+  max-height: 280px;
+  overflow: auto;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.msg {
+  border: 1px solid rgba(80, 223, 255, 0.2);
+  border-radius: 0.7rem;
+  padding: 0.5rem;
+}
+
+.msg header {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.msg.role-user {
+  border-color: rgba(255, 151, 54, 0.35);
+}
+
+.jarvis-panel {
+  display: grid;
+  align-content: start;
+  gap: 0.65rem;
+}
+
+.activity-list {
+  max-height: 230px;
+  overflow: auto;
+}
+
+.settings-panel {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.settings-panel label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.84rem;
+}
+
+.error-box {
+  border: 1px solid rgba(255, 79, 124, 0.6);
+  border-radius: 0.7rem;
+  padding: 0.6rem;
+  color: #ffd7e4;
+}
+
+.transcript-box {
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  padding: 0.6rem;
+  color: #9ed7e6;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinReverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes speaking {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@media (max-width: 1180px) {
+  .jarvis-shell {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .jarvis-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 860px) {
+  .jarvis-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .status-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reactor {
+    width: min(80vw, 300px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
